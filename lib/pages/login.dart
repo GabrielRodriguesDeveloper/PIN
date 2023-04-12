@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:security_system/pages/validator/cpfValidator.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,6 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     var inputCpf = '';
     var inputPassword = '';
+    var state = context.watch<MyAppState>;
 
     return Scaffold(
         backgroundColor: Colors.deepPurple,
@@ -52,7 +55,22 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const Divider(),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        final url = "https://minhaapi.com/login";
+                        final headers = {'Content-Type': 'application/json'};
+                        final body = json
+                            .encode({'cpf': inputCpf, 'senha': inputPassword});
+                        final response =
+                            await http.post(url, headers: headers, body: body);
+
+                        if (response.statusCode == 200) {
+                          // Login realizado com sucesso
+                          // Faça algo aqui, como navegar para uma nova página
+                        } else {
+                          // Erro ao realizar login
+                          // Exiba uma mensagem de erro para o usuário
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white),
                       child: const Text("Entrar",
